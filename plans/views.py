@@ -17,7 +17,7 @@ class SubscriptionPlansView(APIView):
     def get(self, request):
         plans = SubscriptionPlan.objects.all()
         serializer = SubscriptionPlanSerializer(plans, many=True)
-        return Response(serializer.data, status= status.HHTTP_200_OK)
+        return Response(serializer.data, status= status.HTTP_200_OK)
 
 def home(request):
     return render(request, 'home.html')
