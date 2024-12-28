@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from decouple import config
 from pathlib import Path
 import os
 
@@ -21,12 +22,38 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'm!^7!_3x-60oh1$(ms0h27ewmvks0$%2__91hjgj71z$_to9i='
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.ngrok-free.app', '.ngrok.io']
+
+
+# Configure logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'plans.mpesa': {  # This will catch all loggers in the mpesa app
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 
 # Application definition
@@ -40,6 +67,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'plans',
     'corsheaders',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -85,9 +113,9 @@ WSGI_APPLICATION = 'subscriptionPlanDjango.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'subscription',
-        'USER': 'postgres',
-        'PASSWORD': 'briankihiakiama',
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
         'HOST': 'localhost'
     }
 }
@@ -130,3 +158,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# now we write code for mpesa MPESA integration
+
+# ENVIronment below defines whether you are using the sandbox or production environment
+MPESA_ENVIRONMENT = 'sandbox'
+# the below are from the daraja portal for your app
+# they are used to obtain an OAuth token for API authentication
+MPESA_CONSUMER_KEY = 'aT7PfpVpPxgTCmLWnyFdX7xXv31jjEYH90vHWUgO5nu3BUoo'
+MPESA_CONSUMER_SECRET='8sVAZDn53Oo1QNattk8u9aPyPDGpRiykgvaa1EEvTGUeMF28JBGN6zwrW3dqDTnt'
+# the shortcode is general shortcode, same for everyone
+MPESA_SHORTCODE= '174379'
+MPESA_SHORTCODE_TYPE = 'paybill'
+# Below is the default sandbox passkey
+MPESA_PASSKEY= 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+# below are the default sandbox values
+MPESA_INITIATOR_USERNAME = 'testapi'
+MPESA_INITIATOR_SECURITY_CREDENTIAL = 'Safaricom999!*!'

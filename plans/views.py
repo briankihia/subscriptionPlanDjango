@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import SubscriptionPlan # this imports the normal data
 from .serializers import SubscriptionPlanSerializer  #this imports the json data
+from .mpesa.utils import initiate_payment
 
 
 

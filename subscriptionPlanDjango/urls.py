@@ -18,6 +18,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # below is referncing the urls in plans app
     path('', include('plans.urls')),
 ]
