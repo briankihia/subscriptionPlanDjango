@@ -43,7 +43,7 @@ def initiate_payment(amount, phone_number, request=None):
         "PartyA": phone_number,
         "PartyB": BUSINESS_SHORTCODE,
         "PhoneNumber": phone_number,
-        "CallBackURL": f"{CALLBACK}/api/mpesa/callback/",
+        "CallBackURL":  f"{CALLBACK}",
         "AccountReference": ACCOUNT_REFERENCE,
         "TransactionDesc": "Payment for subscription"
     }
